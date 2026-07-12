@@ -1,0 +1,26 @@
+{
+  "run_dir": "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII",
+  "created_at_utc": "2026-07-09T18:09:06.080029+00:00",
+  "source_artifacts": {
+    "results": "/home/ampking258/Downloads/Project_Aarav/results/experiment_results.json",
+    "robustness": "/home/ampking258/Downloads/Project_Aarav/results/robustness_analysis.json",
+    "feature_benchmark": "/home/ampking258/Downloads/Project_Aarav/results/feature_selection_benchmark_ii.json"
+  },
+  "generated_files": [
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/comparison_accuracy.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/comparison_f1_score.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/comparison_precision.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/comparison_recall.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/comparison_detection_rate.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/training_time_comparison.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/heatmap_f1_original.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/heatmap_detection_rate_original.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/variant_delta_f1.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/robustness_heatmap_f1.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/performance_drop_chart.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/robustness_ranking.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/feature_selection_tradeoff_f1.png",
+    "/home/ampking258/Downloads/Project_Aarav/results/runs/20260709_180902UTC_phaseII/figures/feature_selection_recommendations.png"
+  ],
+  "n_generated_files": 14
+}

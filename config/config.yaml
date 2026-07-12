@@ -1,0 +1,225 @@
+# ============================================================================
+# CICIoV2024 Evaluation Framework - Experiment Configuration
+# ============================================================================
+
+# Reproducibility
+seed: 42
+n_jobs: -1  # -1 = use all CPU cores
+
+# Dataset paths (relative to project root)
+dataset:
+  base_dir: "CICIoV2024"
+  format: "decimal"  # "decimal" or "hexadecimal"
+  files:
+    benign: "decimal_benign.csv"
+    DoS: "decimal_DoS.csv"
+    spoofing_GAS: "decimal_spoofing-GAS.csv"
+    spoofing_RPM: "decimal_spoofing-RPM.csv"
+    spoofing_SPEED: "decimal_spoofing-SPEED.csv"
+    spoofing_STEERING_WHEEL: "decimal_spoofing-STEERING_WHEEL.csv"
+
+# Preprocessing
+preprocessing:
+  remove_duplicates: true
+  duplicate_subset: ["ID", "DATA_0", "DATA_1", "DATA_2", "DATA_3", "DATA_4", "DATA_5", "DATA_6", "DATA_7"]
+  normalize: true
+  normalization_method: "minmax"  # "minmax" or "standard"
+  add_inter_arrival_index: true   # positional proxy for inter-arrival time
+
+# Feature engineering
+features:
+  frame_level:
+    - "ID"
+    - "DATA_0"
+    - "DATA_1"
+    - "DATA_2"
+    - "DATA_3"
+    - "DATA_4"
+    - "DATA_5"
+    - "DATA_6"
+    - "DATA_7"
+  use_sliding_window: true
+  window_size: 10
+  window_stride: 1
+  # Sliding-window representation for non-sequence models:
+  # - "flatten": raw concatenated window
+  # - "aggregate": summary statistics per feature
+  # - "hybrid": flatten + aggregate
+  window_representation: "flatten"
+  aggregate_statistics:
+    - "mean"
+    - "std"
+    - "min"
+    - "max"
+    - "last"
+    - "delta"
+
+# Feature selection
+feature_selection:
+  enabled: false  # set to true to activate
+  method: "mutual_information"  # "mutual_information" or "chi_squared"
+  k: "all"  # number of features to keep, or "all"
+  correlation_filter:
+    enabled: false
+    threshold: 0.95
+  pca:
+    enabled: false
+    n_components: 0.95  # fraction of variance to retain
+
+# Data splitting
+splitting:
+  test_size: 0.2
+  validation_size: 0.1  # fraction of training set
+  strategies:
+    - "random"
+    - "scenario"
+    - "attack_holdout"
+    # - "cross_validation"  # uncomment to enable k-fold CV
+  # For attack-holdout: which attack types to hold out (one experiment each)
+  holdout_attacks:
+    - "DoS"
+    - "GAS"
+    - "RPM"
+    - "SPEED"
+    - "STEERING_WHEEL"
+
+# Models
+models:
+  random_forest:
+    enabled: true
+    params:
+      n_estimators: 200
+      max_depth: 20
+      min_samples_split: 5
+      min_samples_leaf: 2
+      class_weight: "balanced"
+
+  svm:
+    enabled: true
+    params:
+      kernel: "rbf"
+      C: 1.0
+      gamma: "scale"
+      class_weight: "balanced"
+      max_iter: 5000
+
+  xgboost:
+    enabled: true
+    params:
+      n_estimators: 200
+      max_depth: 8
+      learning_rate: 0.1
+      subsample: 0.8
+      colsample_bytree: 0.8
+      eval_metric: "mlogloss"
+
+  lightgbm:
+    enabled: true
+    params:
+      n_estimators: 200
+      max_depth: 8
+      learning_rate: 0.1
+      num_leaves: 31
+      subsample: 0.8
+      colsample_bytree: 0.8
+      class_weight: "balanced"
+      verbose: -1
+
+# Deep learning models (requires TensorFlow)
+deep_learning:
+  enabled: true  # set to true to include DL models
+  models:
+    mlp:
+      enabled: true
+      params:
+        hidden_layers: [128, 64, 32]
+        dropout: 0.3
+        epochs: 20
+        batch_size: 256
+    lstm:
+      enabled: true  # requires use_sliding_window: true
+      params:
+        lstm_units: [64, 32]
+        dropout: 0.3
+        epochs: 20
+        batch_size: 256
+    cnn1d:
+      enabled: true  # requires use_sliding_window: true
+      params:
+        filters: [64, 128]
+        kernel_size: 3
+        dropout: 0.3
+        epochs: 20
+        batch_size: 256
+
+# Cross-validation (used when "cross_validation" is in splitting.strategies)
+cross_validation:
+  n_folds: 5
+
+# Evaluation
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "roc_auc"
+    - "confusion_matrix"
+    - "detection_rate"
+    - "false_positive_rate"
+    - "inference_latency"
+  average: "weighted"  # for multi-class metrics
+
+# Visualization
+visualization:
+  enabled: true
+  confusion_matrix: true
+  roc_curves: true
+  model_comparison: true
+  training_time: true
+
+# Dataset Augmentation (for robustness evaluation)
+augmentation:
+  enabled: true
+  save_augmented_datasets: true
+  strategies:
+    timing_jitter:
+      enabled: true
+      jitter_pct: 0.02  # 2% perturbation of inter-arrival features
+    feature_noise:
+      enabled: true
+      noise_level: 0.01  # σ = 0.01 × feature_std
+    attack_intensity:
+      enabled: true
+      scale_range: [0.85, 1.15]  # random scale factor for attack traffic
+    adversarial_evasion:
+      enabled: false
+      epsilon: 0.03         # max perturbation as fraction of feature range
+      attack_fraction: 1.0  # fraction of attack rows to perturb
+      benign_pull: 0.7      # pull factor toward benign centroid
+      noise_scale: 0.01     # stochastic component (feature-range scaled)
+
+# Cross-dataset validation (train on CICIoV2024, test on external datasets)
+cross_dataset_validation:
+  enabled: false
+  allow_missing: true
+  datasets:
+    car_hacking:
+      enabled: false
+      path: "external_datasets/car_hacking.csv"
+      label_mapping: {}
+    otids:
+      enabled: false
+      path: "external_datasets/otids.csv"
+      label_mapping: {}
+    road:
+      enabled: false
+      path: "external_datasets/road.csv"
+      label_mapping: {}
+
+# Output
+output:
+  results_dir: "results"
+  save_models: false
+  save_predictions: true
+  save_splits: true

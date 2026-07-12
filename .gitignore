@@ -1,0 +1,32 @@
+# Virtual environment
+.env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Dataset (large files - track separately or use Git LFS)
+CICIoV2024/binary/
+CICIoV2024/decimal/
+CICIoV2024/hexadecimal/
+
+# Results (regenerable)
+results/*.json
+results/*.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
